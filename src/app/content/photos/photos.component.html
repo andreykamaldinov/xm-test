@@ -1,0 +1,8 @@
+<app-list
+    title="List view"
+    [disabled]="photosService.loading()"
+    (scrolled)="loadPhotos()"
+    [photos]="photosService.photos()"
+    [showIsFavoriteBadge]="true"
+    (photoCLick)="addToFavorite($event)"
+    appInfiniteScroll />

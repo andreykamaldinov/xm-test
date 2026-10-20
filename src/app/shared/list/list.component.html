@@ -1,0 +1,57 @@
+<section class="container">
+    <div class="header">
+        <h1>{{ title() }}</h1>
+
+        <div class="button-row">
+            @for (page of pages; track page.title) {
+                <button
+                    matButton
+                    [attr.aria-label]="page.title + ' page'"
+                    [routerLink]="'/' + page.route"
+                    routerLinkActive="active"
+                    ariaCurrentWhenActive="page">
+                    {{ page.title }}
+                </button>
+            }
+        </div>
+    </div>
+
+    <div class="photos-block">
+        @if (photos().length === 0) {
+            <p class="empty">{{ emptyMsg() }}</p>
+        }
+
+        @for (photo of photos(); track photo.id; let i = $index) {
+            <button
+                class="photo-card"
+                type="button"
+                [attr.aria-label]="'Open photo by ' + photo.author"
+                (click)="onClick(photo)">
+                <img
+                    [ngSrc]="
+                        'https://picsum.photos/id/' +
+                        photo.id +
+                        '/' +
+                        photoWidth() +
+                        '/' +
+                        photoHeight()
+                    "
+                    [width]="photoWidth()"
+                    [height]="photoHeight()"
+                    [alt]="photo.author"
+                    [priority]="i < 3"
+                    [class.is-favorite]="
+                        showIsFavoriteBadge() && favoritesService.isFavorite(photo.id)
+                    " />
+
+                @if (showIsFavoriteBadge() && favoritesService.isFavorite(photo.id)) {
+                    <span class="photo-badge">In favorites</span>
+                }
+            </button>
+        }
+    </div>
+
+    <ng-content />
+
+    <app-spinner [loading]="photosService.loading()" />
+</section>
